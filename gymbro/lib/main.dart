@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:gymbro/navBar.dart';
 
 void main() {
   runApp(const MainApp());
@@ -16,16 +16,11 @@ class MainApp extends StatelessWidget {
           child: Text('Welcome to GymBro!'),
         ),
         appBar: AppBar(
-          title: const Text("GymBro!"),
+          title: const Center(
+            child: Text('GymBro!'),
+          ),
         ),
-        bottomNavigationBar: BottomNavigationBar(
-          items: const <BottomNavigationBarItem>[
-            BottomNavigationBarItem(
-                icon: FaIcon(FontAwesomeIcons.house), label: 'Home'),
-            BottomNavigationBarItem(
-                icon: FaIcon(FontAwesomeIcons.dumbbell), label: 'Workout'),
-          ],
-        ),
+        bottomNavigationBar: const Navbar(),
       ),
     );
   }
