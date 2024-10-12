@@ -73,4 +73,9 @@ class DatabaseService {
     final db = await database;
     await db.update(exerciseTable, {'currentDay': day});
   }
+
+  // Delete database
+  Future<void> deleteDatabase() async {
+    databaseFactory.deleteDatabase(await getDatabasesPath());
+  }
 }
