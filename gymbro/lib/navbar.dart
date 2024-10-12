@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:gymbro/home.dart';
+import 'package:gymbro/pages/home_page.dart';
 
 class Navbar extends StatefulWidget {
   const Navbar({super.key});
@@ -44,7 +44,7 @@ class _NavbarState extends State<Navbar> {
           NavigationDestination(
             selectedIcon: FaIcon(FontAwesomeIcons.dumbbell),
             icon: FaIcon(FontAwesomeIcons.dumbbell),
-            label: "Workouts",
+            label: "Workout History",
           ),
         ],
       ),

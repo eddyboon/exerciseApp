@@ -2,16 +2,18 @@ import 'package:flutter/material.dart';
 import 'package:gymbro/components/home_page_exercises.dart';
 import 'package:gymbro/components/home_page_reps.dart';
 import 'package:gymbro/components/home_page_sets.dart';
+import 'package:gymbro/pages/add_workout_page.dart';
 
 class HomePage extends StatelessWidget {
   const HomePage({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return const SafeArea(
+    return SafeArea(
       child: Column(
         children: [
-          Row(
+          // Today's Plan Title
+          const Row(
             children: [
               Padding(
                 padding: EdgeInsets.fromLTRB(5.0, 2.0, 0, 0),
@@ -22,7 +24,8 @@ class HomePage extends StatelessWidget {
               ),
             ],
           ),
-          Padding(
+          // Today's Plan Card
+          const Padding(
             padding: EdgeInsets.fromLTRB(10.0, 0, 10.0, 0),
             child: Card(
               elevation: 3.0,
@@ -80,6 +83,21 @@ class HomePage extends StatelessWidget {
                   ),
                 ],
               ),
+            ),
+          ),
+          // Column for buttons
+          Padding(
+            padding: const EdgeInsets.fromLTRB(0, 10.0, 0, 0),
+            child: Column(
+              children: [
+                // Start Workout Button
+                ElevatedButton(
+                  onPressed: () {},
+                  child: const Text("Start Workout"),
+                ),
+                // Add Workout Button
+                AddWorkout(),
+              ],
             ),
           ),
         ],
