@@ -99,10 +99,15 @@ class _AddWorkoutState extends State<AddWorkout> {
                               if (currentDay == 0) {
                                 currentDay = 1;
                               }
-                              // Add workout to database
-                              databaseService.addExercise(
-                                  workoutName, 0, 0, 0, type, currentDay);
-                              databaseService.notifyListeners();
+                              // Check if workout already exists
+                              final List<String> exerciseNames =
+                                  await databaseService.getExerciseNamesList();
+                              if (!exerciseNames.contains(workoutName)) {
+                                // Add workout to database
+                                databaseService.addExercise(
+                                    workoutName, 0, 0, 0, type, currentDay);
+                                databaseService.notifyListeners();
+                              }
                               if (mounted) {
                                 setState(() {
                                   enableButton = false;

@@ -31,9 +31,9 @@ class DatabaseService {
   }
 
   void _initializeStreams() {
-    getExerciseNames();
-    getExerciseReps();
-    getExerciseSets();
+    _getExerciseNames();
+    _getExerciseReps();
+    _getExerciseSets();
   }
 
   Stream<List<String>> get exerciseNames => _exerciseNamesController.stream;
@@ -41,9 +41,9 @@ class DatabaseService {
   Stream<List<int>> get exerciseSets => _exerciseSetsController.stream;
 
   void notifyListeners() {
-    getExerciseNames();
-    getExerciseReps();
-    getExerciseSets();
+    _getExerciseNames();
+    _getExerciseReps();
+    _getExerciseSets();
   }
 
   void disposeStreams() {
@@ -96,14 +96,15 @@ class DatabaseService {
     return db.query(exerciseTable);
   }
 
-  // // Get all exercise names
-  // Future<List<String>> getExerciseNames() async {
-  //   final db = await database;
-  //   List<Map<String, dynamic>> maps = await db.query(exerciseTable);
-  //   return List.generate(maps.length, (index) => maps[index]['name']);
-  // }
+  // Get all exercise names
+  Future<List<String>> getExerciseNamesList() async {
+    final db = await database;
+    List<Map<String, dynamic>> maps = await db.query(exerciseTable);
+    return List.generate(maps.length, (index) => maps[index]['name']);
+  }
+
   // Get all exercise names as Stream of Strings
-  void getExerciseNames() async {
+  void _getExerciseNames() async {
     final db = await database;
     final List<Map<String, dynamic>> maps = await db.query(exerciseTable);
     _exerciseNamesController
@@ -111,14 +112,14 @@ class DatabaseService {
   }
 
   // Get all exercise reps
-  // Future<List<int>> getExerciseReps() async {
-  //   final db = await database;
-  //   List<Map<String, dynamic>> maps = await db.query(exerciseTable);
-  //   return List.generate(maps.length, (index) => maps[index]['reps']);
-  // }
+  Future<List<int>> getExerciseRepsList() async {
+    final db = await database;
+    List<Map<String, dynamic>> maps = await db.query(exerciseTable);
+    return List.generate(maps.length, (index) => maps[index]['reps']);
+  }
 
   // get all exercise reps as Stream of Integers
-  void getExerciseReps() async {
+  void _getExerciseReps() async {
     final db = await database;
     final List<Map<String, dynamic>> maps = await db.query(exerciseTable);
     _exerciseRepsController
@@ -126,14 +127,14 @@ class DatabaseService {
   }
 
   // Get all exercise sets
-  // Future<List<int>> getExerciseSets() async {
-  //   final db = await database;
-  //   List<Map<String, dynamic>> maps = await db.query(exerciseTable);
-  //   return List.generate(maps.length, (index) => maps[index]['sets']);
-  // }
+  Future<List<int>> getExerciseSetsList() async {
+    final db = await database;
+    List<Map<String, dynamic>> maps = await db.query(exerciseTable);
+    return List.generate(maps.length, (index) => maps[index]['sets']);
+  }
 
   // Get all exercise sets as Stream of Integers
-  void getExerciseSets() async {
+  void _getExerciseSets() async {
     final db = await database;
     final List<Map<String, dynamic>> maps = await db.query(exerciseTable);
     _exerciseSetsController
@@ -141,14 +142,14 @@ class DatabaseService {
   }
 
   // Get all exercise weights
-  Future<List<int>> getExerciseWeights() async {
+  Future<List<int>> getExerciseWeightsList() async {
     final db = await database;
     List<Map<String, dynamic>> maps = await db.query(exerciseTable);
     return List.generate(maps.length, (index) => maps[index]['weights']);
   }
 
   // Get all exercise types
-  Future<List<String>> getExerciseTypes() async {
+  Future<List<String>> getExerciseTypesList() async {
     final db = await database;
     List<Map<String, dynamic>> maps = await db.query(exerciseTable);
     return List.generate(maps.length, (index) => maps[index]['type']);
