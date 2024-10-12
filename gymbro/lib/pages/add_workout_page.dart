@@ -59,6 +59,7 @@ class _AddWorkoutState extends State<AddWorkout> {
                   mainAxisSize: MainAxisSize.min,
                   children: [
                     TextField(
+                      textCapitalization: TextCapitalization.words,
                       controller: workoutNameController,
                       onChanged: (value) {
                         setState(() {
@@ -74,6 +75,7 @@ class _AddWorkoutState extends State<AddWorkout> {
                       ),
                     ),
                     TextField(
+                      textCapitalization: TextCapitalization.words,
                       controller: typeController,
                       onChanged: (value) {
                         setState(() {
@@ -98,13 +100,16 @@ class _AddWorkoutState extends State<AddWorkout> {
                                 currentDay = 1;
                               }
                               // Add workout to database
-                              // databaseService.addExercise(
-                              //     workoutName, 0, 0, 0, type, currentDay);
-                              setState(() {
-                                enableButton = false;
-                                workoutNameController.clear();
-                                typeController.clear();
-                              });
+                              databaseService.addExercise(
+                                  workoutName, 0, 0, 0, type, currentDay);
+                              databaseService.notifyListeners();
+                              if (mounted) {
+                                setState(() {
+                                  enableButton = false;
+                                  workoutNameController.clear();
+                                  typeController.clear();
+                                });
+                              }
                               Navigator.of(context).pop();
                             }
                           : null,

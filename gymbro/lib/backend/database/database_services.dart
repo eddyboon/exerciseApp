@@ -7,6 +7,13 @@ class DatabaseService {
   static Database? _db;
   static final DatabaseService instance = DatabaseService._constructor();
 
+  final StreamController<List<String>> _exerciseNamesController =
+      StreamController<List<String>>.broadcast();
+  final StreamController<List<int>> _exerciseRepsController =
+      StreamController<List<int>>.broadcast();
+  final StreamController<List<int>> _exerciseSetsController =
+      StreamController<List<int>>.broadcast();
+
   final String exerciseTable = 'exercises';
 
   DatabaseService._constructor();
@@ -17,6 +24,32 @@ class DatabaseService {
     }
     _db = await getDatabase();
     return _db!;
+  }
+
+  DatabaseService() {
+    _initializeStreams();
+  }
+
+  void _initializeStreams() {
+    getExerciseNames();
+    getExerciseReps();
+    getExerciseSets();
+  }
+
+  Stream<List<String>> get exerciseNames => _exerciseNamesController.stream;
+  Stream<List<int>> get exerciseReps => _exerciseRepsController.stream;
+  Stream<List<int>> get exerciseSets => _exerciseSetsController.stream;
+
+  void notifyListeners() {
+    getExerciseNames();
+    getExerciseReps();
+    getExerciseSets();
+  }
+
+  void disposeStreams() {
+    _exerciseNamesController.close();
+    _exerciseRepsController.close();
+    _exerciseSetsController.close();
   }
 
   Future<Database> getDatabase() async {
@@ -55,6 +88,70 @@ class DatabaseService {
         'currentDay': currentDay
       },
     );
+  }
+
+  // Get all exercises
+  Future<List<Map<String, dynamic>>> getExercises() async {
+    final db = await database;
+    return db.query(exerciseTable);
+  }
+
+  // // Get all exercise names
+  // Future<List<String>> getExerciseNames() async {
+  //   final db = await database;
+  //   List<Map<String, dynamic>> maps = await db.query(exerciseTable);
+  //   return List.generate(maps.length, (index) => maps[index]['name']);
+  // }
+  // Get all exercise names as Stream of Strings
+  void getExerciseNames() async {
+    final db = await database;
+    final List<Map<String, dynamic>> maps = await db.query(exerciseTable);
+    _exerciseNamesController
+        .add(List.generate(maps.length, (index) => maps[index]['name']));
+  }
+
+  // Get all exercise reps
+  // Future<List<int>> getExerciseReps() async {
+  //   final db = await database;
+  //   List<Map<String, dynamic>> maps = await db.query(exerciseTable);
+  //   return List.generate(maps.length, (index) => maps[index]['reps']);
+  // }
+
+  // get all exercise reps as Stream of Integers
+  void getExerciseReps() async {
+    final db = await database;
+    final List<Map<String, dynamic>> maps = await db.query(exerciseTable);
+    _exerciseRepsController
+        .add(List.generate(maps.length, (index) => maps[index]['reps']));
+  }
+
+  // Get all exercise sets
+  // Future<List<int>> getExerciseSets() async {
+  //   final db = await database;
+  //   List<Map<String, dynamic>> maps = await db.query(exerciseTable);
+  //   return List.generate(maps.length, (index) => maps[index]['sets']);
+  // }
+
+  // Get all exercise sets as Stream of Integers
+  void getExerciseSets() async {
+    final db = await database;
+    final List<Map<String, dynamic>> maps = await db.query(exerciseTable);
+    _exerciseSetsController
+        .add(List.generate(maps.length, (index) => maps[index]['sets']));
+  }
+
+  // Get all exercise weights
+  Future<List<int>> getExerciseWeights() async {
+    final db = await database;
+    List<Map<String, dynamic>> maps = await db.query(exerciseTable);
+    return List.generate(maps.length, (index) => maps[index]['weights']);
+  }
+
+  // Get all exercise types
+  Future<List<String>> getExerciseTypes() async {
+    final db = await database;
+    List<Map<String, dynamic>> maps = await db.query(exerciseTable);
+    return List.generate(maps.length, (index) => maps[index]['type']);
   }
 
   // Get currentDay of first exercise

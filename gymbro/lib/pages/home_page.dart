@@ -1,11 +1,51 @@
 import 'package:flutter/material.dart';
+import 'package:gymbro/backend/database/database_services.dart';
+import 'package:gymbro/backend/models/exercise.dart';
 import 'package:gymbro/components/home_page_exercises.dart';
 import 'package:gymbro/components/home_page_reps.dart';
 import 'package:gymbro/components/home_page_sets.dart';
 import 'package:gymbro/pages/add_workout_page.dart';
 
-class HomePage extends StatelessWidget {
+class HomePage extends StatefulWidget {
   const HomePage({super.key});
+
+  @override
+  State<HomePage> createState() => _HomePageState();
+}
+
+class _HomePageState extends State<HomePage> {
+  final DatabaseService databaseService = DatabaseService.instance;
+
+  // function to get all exercises
+  Future<List<Exercise>> getExercises() async {
+    final db = await databaseService.database;
+    final List<Map<String, dynamic>> maps = await db.query('exercises');
+    return List.generate(maps.length, (index) {
+      return Exercise(
+        name: maps[index]['name'],
+        sets: maps[index]['sets'],
+        reps: maps[index]['reps'],
+        type: maps[index]['type'],
+      );
+    });
+  }
+
+  // init state
+  @override
+  void initState() {
+    super.initState();
+    // Iterate through all exercises and print them
+    getExercises().then((value) {
+      value.forEach((element) {
+        print(element.name);
+        print(element.reps);
+        print(element.sets);
+        print(element.type);
+      });
+    });
+
+    databaseService.notifyListeners();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -25,7 +65,7 @@ class HomePage extends StatelessWidget {
             ],
           ),
           // Today's Plan Card
-          const Padding(
+          Padding(
             padding: EdgeInsets.fromLTRB(10.0, 0, 10.0, 0),
             child: Card(
               elevation: 3.0,
@@ -44,9 +84,21 @@ class HomePage extends StatelessWidget {
                               fontSize: 15, fontWeight: FontWeight.bold),
                         ),
                       ),
-                      HomePageWorkouts(workoutName: "Bench Press"),
-                      HomePageWorkouts(workoutName: "Squats"),
-                      HomePageWorkouts(workoutName: "Deadlifts"),
+                      StreamBuilder(
+                          stream: databaseService.exerciseNames,
+                          builder: (BuildContext context,
+                              AsyncSnapshot<List<String>> snapshot) {
+                            if (snapshot.hasData) {
+                              return Column(
+                                children: snapshot.data!
+                                    .map((workoutName) => HomePageWorkouts(
+                                        workoutName: workoutName))
+                                    .toList(),
+                              );
+                            } else {
+                              return HomePageWorkouts(workoutName: "-");
+                            }
+                          }),
                     ],
                   ),
                   // Reps Column
@@ -60,9 +112,20 @@ class HomePage extends StatelessWidget {
                               fontSize: 15, fontWeight: FontWeight.bold),
                         ),
                       ),
-                      HomePageReps(reps: 3),
-                      HomePageReps(reps: 5),
-                      HomePageReps(reps: 3),
+                      StreamBuilder(
+                          stream: databaseService.exerciseReps,
+                          builder: (BuildContext context,
+                              AsyncSnapshot<List<int>> snapshot) {
+                            if (snapshot.hasData) {
+                              return Column(
+                                children: snapshot.data!
+                                    .map((reps) => HomePageReps(reps: reps))
+                                    .toList(),
+                              );
+                            } else {
+                              return HomePageReps(reps: 0);
+                            }
+                          }),
                     ],
                   ),
                   // Sets Column
@@ -76,9 +139,20 @@ class HomePage extends StatelessWidget {
                               fontSize: 15, fontWeight: FontWeight.bold),
                         ),
                       ),
-                      HomePageSets(sets: 5),
-                      HomePageSets(sets: 3),
-                      HomePageSets(sets: 5),
+                      StreamBuilder(
+                          stream: databaseService.exerciseSets,
+                          builder: (BuildContext context,
+                              AsyncSnapshot<List<int>> snapshot) {
+                            if (snapshot.hasData) {
+                              return Column(
+                                children: snapshot.data!
+                                    .map((sets) => HomePageSets(sets: sets))
+                                    .toList(),
+                              );
+                            } else {
+                              return HomePageSets(sets: 0);
+                            }
+                          }),
                     ],
                   ),
                 ],
@@ -92,7 +166,9 @@ class HomePage extends StatelessWidget {
               children: [
                 // Start Workout Button
                 ElevatedButton(
-                  onPressed: () {},
+                  onPressed: () {
+                    databaseService.deleteDatabase();
+                  },
                   child: const Text("Start Workout"),
                 ),
                 // Add Workout Button
