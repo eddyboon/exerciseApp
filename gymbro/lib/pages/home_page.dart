@@ -35,7 +35,7 @@ class _HomePageState extends State<HomePage> {
   void initState() {
     super.initState();
     // Iterate through all exercises and print them
-    getExercises().then((value) {
+/*    getExercises().then((value) {
       value.forEach((element) {
         print(element.name);
         print(element.reps);
@@ -43,7 +43,7 @@ class _HomePageState extends State<HomePage> {
         print(element.type);
       });
     });
-
+*/
     databaseService.notifyListeners();
   }
 
@@ -167,7 +167,8 @@ class _HomePageState extends State<HomePage> {
                 // Start Workout Button
                 ElevatedButton(
                   onPressed: () {
-                    databaseService.deleteDatabase();
+                    databaseService.clearDatabase();
+                    databaseService.notifyListeners();
                   },
                   child: const Text("Start Workout"),
                 ),

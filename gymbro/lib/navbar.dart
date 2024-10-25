@@ -23,7 +23,11 @@ class _NavbarState extends State<Navbar> {
         child: <Widget>[
           const HomePage(),
           const Center(
-            child: Text('Workouts'),
+            child: Text(
+                'This will show the workout history. Maybe add a calendar here?'),
+          ),
+          const Center(
+            child: Text('Settings Page'),
           ),
         ][currentPageIndex],
       ),
@@ -45,6 +49,11 @@ class _NavbarState extends State<Navbar> {
             selectedIcon: FaIcon(FontAwesomeIcons.dumbbell),
             icon: FaIcon(FontAwesomeIcons.dumbbell),
             label: "Workout History",
+          ),
+          NavigationDestination(
+            selectedIcon: FaIcon(FontAwesomeIcons.gear),
+            icon: FaIcon(FontAwesomeIcons.gear),
+            label: "Settings",
           ),
         ],
       ),
